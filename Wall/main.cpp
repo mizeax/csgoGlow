@@ -39,7 +39,7 @@ uint64_t glowInfoOffset;
 uint64_t LocalPlayerBase;
 uint64_t playerBase;
 
-uint64_t m_iGlowIndex       = 0xAC10;
+uint64_t m_iGlowIndex       = 0xAD2C;
 bool statBool = true;
 
 struct Color {
@@ -59,8 +59,8 @@ void applyEntityGlow(mach_vm_address_t imgbase, mach_vm_address_t startAddress, 
         }
         
         int glowIndex           = mem->read<int>(memoryAddress + m_iGlowIndex);
-        int health              = mem->read<int>(memoryAddress + 0x134);
-        int playerTeamNum       = mem->read<int>(memoryAddress + 0x128);
+        int health              = mem->read<int>(memoryAddress + 0x138);
+        int playerTeamNum       = mem->read<int>(memoryAddress + 0x12C);
 
         if (playerTeamNum == iTeamNum || playerTeamNum == 0) {
             continue;
@@ -105,10 +105,10 @@ int main(int argc, const char * argv[])
     g_cProc->getModule(mainTask, &moduleStartAddress, &moduleLength, "/client_panorama.dylib");
 
     if (mainTask) {
-        printf("Found the Client.dylib address: 0x%llx \n", moduleStartAddress);
+        printf("Found the client_panorama.dylib address: 0x%llx \n", moduleStartAddress);
         printf("Module should end at 0x%llx\n", moduleStartAddress + moduleLength);
     } else {
-        printf("Failed to get the Client.dylib address\n");
+        printf("Failed to get the client_panorama.dylib address\n");
         exit(0); // we exit here because there is no task for this pid
     }
     
@@ -142,7 +142,7 @@ int main(int argc, const char * argv[])
             // Developer Comment:
             // int health              = mem->read<int>(playerAddress + 0x134);
             // We don't read this because it was never been used
-            int i_teamNum = mem->read<int>(playerAddress + 0x128);
+            int i_teamNum = mem->read<int>(playerAddress + 0x12C);
             
             applyEntityGlow(moduleStartAddress, glowObjectLoopStartAddress, i_teamNum);
         }
